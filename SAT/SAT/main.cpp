@@ -27,7 +27,7 @@ public:
 	int VaribleNumber;
 	int ClauseNumber;
 	//stores the state of the varibles
-	vector<bool> Vars;
+	vector<int> Vars;
 	// stores a vector of the different clauses
 	vector<Clause> Clauses;
 	TruthModel() {
@@ -39,7 +39,7 @@ public:
 		VaribleNumber = VarNum;
 		ClauseNumber = ClaNum;
 		for (int i = 0; i < VarNum; i++) {
-			Vars.push_back(true);
+			Vars.push_back(2);
 		}
 	}
 
@@ -93,10 +93,58 @@ public:
 		}
 		return false;
 	}
-		
+	void ClearVars() {
+		for (int i = 0; i < VaribleNumber; i++) {
+			Vars[i] = 2;
+		}
+	}
 		
 };
 
+void DPLL(TruthModel model) {
+	
+	
+}
+
+/*
+tells if the set values of the var evaluate to true false or unknown;
+*/
+int check_SAT(TruthModel model) {
+	//For each clause
+	bool undefined = false;
+	for (int i = 0; i < model.Clauses.size(); i++) {
+		bool state;
+		if (model.Clauses[i].clause[0] < 0) {
+			state = !model.Vars[model.Clauses[i].clause[0] * -1 - 1];
+		}
+		else {
+			state = model.Vars[model.Clauses[i].clause[0] - 1];
+		}
+
+		//For each value varible in a clause evaluate it with the previous
+		for (int j = 1; j < model.Clauses[i].clause.size(); j++) {
+
+			//If varible is not set then go to the next clause
+			if (2 == !model.Vars[abs(model.Clauses[i].clause[j]) - 1]) {
+				undefined = true;
+				state = true;
+				break;
+			}
+			if (model.Clauses[i].clause[j] < 0)
+				state = !model.Vars[model.Clauses[i].clause[j] * -1 - 1] || state;
+			else
+				state = model.Vars[model.Clauses[i].clause[j] - 1] || state;
+		}
+		if (state == false) {
+			return 0;
+		}
+		
+
+	}
+	if (undefined)
+		return -1;
+	return 1;
+}
 
 
 
