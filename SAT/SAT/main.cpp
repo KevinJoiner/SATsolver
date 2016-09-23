@@ -4,6 +4,7 @@
 #include <string>
 #include <windows.h>
 #include <sstream>
+#include <math.h>
 using namespace std;
 /*
 Author: Kevin Joiner
@@ -53,7 +54,7 @@ public:
 	}
 	
 	//Check to see how many clauses are correct
-	int Get_CValue(){
+	int Get_fitness(){
 		int Cvalue = 0;
 		//For each clause
 		for (int i = 0; i < Clauses.size(); i++) {
@@ -67,6 +68,12 @@ public:
 
 			//For each value varible in a clause evaluate it with the previous
 			for (int j = 1; j < Clauses[i].clause.size(); j++) {
+
+				//If varible is not set then go to the next clause
+				if (2== !Vars[abs(Clauses[i].clause[j]) - 1]){
+					state = false;
+					break;
+				}
 				if (Clauses[i].clause[j] < 0) 
 					state = !Vars[Clauses[i].clause[j]*-1 - 1] || state;
 				else
@@ -81,7 +88,7 @@ public:
 	}
 	// Checks to see if the model is true
 	bool is_True() {
-		if (Get_CValue() == ClauseNumber) {
+		if (Get_fitness() == ClauseNumber) {
 			return true;
 		}
 		return false;
